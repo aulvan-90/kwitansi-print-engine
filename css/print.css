@@ -16,50 +16,53 @@
 }
 
 @media print {
-  /* Reset total margin & padding browser */
+  /* Reset total margin & background putih bersih untuk lembar cetak */
   html, body {
     width: 250mm !important;
     height: 100mm !important;
     margin: 0 !important;
     padding: 0 !important;
     background: #ffffff !important;
+    background-color: #ffffff !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     overflow: hidden !important;
   }
 
-  /* Sembunyikan elemen UI kontrol */
+  /* Sembunyikan SEMUA elemen UI kontrol web */
   .no-print,
   .app-sidebar,
   .app-header,
   .preview-toolbar,
   .ruler-guide,
-  .modal-overlay,
-  .overlay-bg-image {
+  .modal-overlay {
     display: none !important;
   }
 
-  .preview-canvas-container {
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow: hidden !important;
-    display: block !important;
-    background: transparent !important;
-  }
-
+  /* Hilangkan background gelap dari container web (app-container & app-viewport) */
+  .app-container,
+  .app-viewport,
+  .preview-canvas-container,
   .preview-wrapper {
+    display: block !important;
+    position: static !important;
     margin: 0 !important;
     padding: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    display: block !important;
-    transform: none !important;
     width: 250mm !important;
     height: 100mm !important;
+    min-height: 0 !important;
+    max-height: 100mm !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+    overflow: hidden !important;
   }
 
   .kwitansi-sheet {
-    position: relative !important;
+    position: absolute !important;
     width: 250mm !important;
     height: 100mm !important;
     max-width: 250mm !important;
@@ -73,6 +76,7 @@
     page-break-inside: avoid !important;
     left: var(--offset-x, 0mm) !important;
     top: var(--offset-y, 0mm) !important;
+    transform: none !important;
   }
 
   /* ========================================================================
