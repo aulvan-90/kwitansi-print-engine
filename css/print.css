@@ -300,10 +300,10 @@ body.preview-polos-mode .hatch-strip {
    Disesuaikan Sempurna dengan Garis dan Kotak Blangko Toko
    ========================================================================== */
 
-/* 1. Isian Nomor Kwitansi (Garis di 15.7mm) */
+/* 1. Isian Nomor Kwitansi */
 .field-no {
   position: absolute;
-  top: 13.2mm;
+  top: 10.2mm;
   left: 65mm;
   width: 37mm;
   font-size: 10pt;
@@ -314,10 +314,10 @@ body.preview-polos-mode .hatch-strip {
   z-index: 10;
 }
 
-/* 2. Isian Telah Terima Dari (Garis di 24.2mm - Menempel Tepat di Atas Garis) */
+/* 2. Isian Telah Terima Dari */
 .field-terima {
   position: absolute;
-  top: 22.8mm;
+  top: 18.8mm;
   left: 93mm;
   width: 147mm;
   font-size: 10.5pt;
@@ -331,12 +331,12 @@ body.preview-polos-mode .hatch-strip {
   z-index: 10;
 }
 
-/* 3. Isian Terbilang Uang Sejumlah (Di Dalam Kotak Arsir 28.0 - 37.1mm) */
+/* 3. Isian Terbilang Uang Sejumlah (Di Dalam Kotak Arsir) */
 .field-terbilang {
   position: absolute;
-  top: 28.5mm;
-  left: 98mm;
-  width: 142mm;
+  top: 28.2mm;
+  left: 96mm;
+  width: 144mm;
   height: 8.8mm;
   font-size: 9.5pt;
   font-weight: 700;
@@ -350,10 +350,10 @@ body.preview-polos-mode .hatch-strip {
   z-index: 10;
 }
 
-/* 4. Isian Untuk Pembayaran (3 Baris Garis: 44.6mm, 52.1mm, 59.3mm) */
+/* 4. Isian Untuk Pembayaran (3 Baris Garis) */
 .field-untuk-line-1 {
   position: absolute;
-  top: 42.6mm;
+  top: 39.2mm;
   left: 99mm;
   width: 141mm;
   font-size: 9.5pt;
@@ -367,7 +367,7 @@ body.preview-polos-mode .hatch-strip {
 
 .field-untuk-line-2 {
   position: absolute;
-  top: 50.0mm;
+  top: 46.8mm;
   left: 54mm;
   width: 186mm;
   font-size: 9.5pt;
@@ -381,7 +381,7 @@ body.preview-polos-mode .hatch-strip {
 
 .field-untuk-line-3 {
   position: absolute;
-  top: 57.2mm;
+  top: 54.0mm;
   left: 54mm;
   width: 186mm;
   font-size: 9.5pt;
@@ -393,10 +393,10 @@ body.preview-polos-mode .hatch-strip {
   z-index: 10;
 }
 
-/* 5. Isian Tempat & Tanggal Transaksi (Garis di 66.8mm) */
+/* 5. Isian Tempat & Tanggal Transaksi */
 .field-tanggal-tempat {
   position: absolute;
-  top: 64.2mm;
+  top: 61.2mm;
   left: 160mm;
   width: 80mm;
   font-size: 9.5pt;
