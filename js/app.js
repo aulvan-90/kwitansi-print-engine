@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const valOverlayOpacity = document.getElementById('valOverlayOpacity');
   const photoOverlayBg = document.getElementById('photoOverlayBg');
   const chkShowSaksi = document.getElementById('chkShowSaksi');
+  const chkShowStub = document.getElementById('chkShowStub');
   const chkShowRulers = document.getElementById('chkShowRulers');
 
   // Preview Fields
@@ -236,6 +237,28 @@ document.addEventListener('DOMContentLoaded', () => {
       groupSaksi.style.display = 'none';
     }
   });
+
+  // Toggle Cetak Bonggol Kiri (Arsip)
+  if (chkShowStub) {
+    const savedStub = localStorage.getItem('kwitansi_show_stub');
+    if (savedStub === 'false') {
+      chkShowStub.checked = false;
+      document.body.classList.add('hide-stub');
+    } else {
+      chkShowStub.checked = true;
+      document.body.classList.remove('hide-stub');
+    }
+
+    chkShowStub.addEventListener('change', (e) => {
+      if (e.target.checked) {
+        document.body.classList.remove('hide-stub');
+        localStorage.setItem('kwitansi_show_stub', 'true');
+      } else {
+        document.body.classList.add('hide-stub');
+        localStorage.setItem('kwitansi_show_stub', 'false');
+      }
+    });
+  }
 
   // Toggle & Slider Overlay Blangko Asli
   chkShowPhotoOverlay.addEventListener('change', (e) => {

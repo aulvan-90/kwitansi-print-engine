@@ -479,6 +479,10 @@ body.preview-polos-mode .hatch-strip {
 
 /* Lembar Bonggol Kiri (0 - 43mm)
    Teks diposisikan di tengah (center) simetris dengan frame ornamen */
+body.hide-stub .kwitansi-stub {
+  display: none !important;
+}
+
 .kwitansi-stub {
   position: absolute;
   top: 5mm;
