@@ -407,12 +407,12 @@ body.preview-polos-mode .hatch-strip {
 }
 
 /* 6. Isian Kotak Nominal Angka (Rp. 100.000.000,-)
-   Pas Tepat di Tengah Vertikal Kotak Arsir Blangko Toko (78.6mm - 88.6mm) */
+   Pas Tepat di Tengah Vertikal & Horizontal Kotak Arsir Blangko Toko */
 .field-nominal {
   position: absolute;
   top: 78.6mm;
-  left: 65.5mm;
-  width: 56.5mm;
+  left: 72.5mm;
+  width: 50.0mm;
   height: 10.0mm;
   font-size: 12.5pt;
   font-weight: 800;
