@@ -314,10 +314,10 @@ body.preview-polos-mode .hatch-strip {
   z-index: 10;
 }
 
-/* 2. Isian Telah Terima Dari (Menempel Tepat di Atas Garis Horizontal Blangko) */
+/* 2. Isian Telah Terima Dari */
 .field-terima {
   position: absolute;
-  top: 20.4mm;
+  top: 18.8mm;
   left: 93mm;
   width: 147mm;
   font-size: 10.5pt;
