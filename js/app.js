@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const viewMainNominal = document.getElementById('viewMainNominal');
   const viewMainPenerima = document.getElementById('viewMainPenerima');
   const viewMainSaksi = document.getElementById('viewMainSaksi');
+  const viewMainSaksiRole = document.getElementById('viewMainSaksiRole');
   const viewBoxSaksi = document.getElementById('viewBoxSaksi');
   const viewMateraiSlot = document.getElementById('viewMateraiSlot');
 
@@ -171,7 +172,29 @@ document.addEventListener('DOMContentLoaded', () => {
     viewMainKota.textContent = kota;
     viewMainTanggal.textContent = tanggal;
     viewMainPenerima.textContent = `( ${penerima} )`;
-    viewMainSaksi.textContent = `( ${saksi} )`;
+
+    // Format Saksi: Pisahkan nama dan keterangan jabatan jika ada, serta hilangkan duplikasi kurung
+    let saksiRaw = saksi;
+    let saksiName = saksiRaw;
+    let saksiRole = '';
+
+    const roleMatch = saksiRaw.match(/^([^(]+?)\s*(?:\(([^)]+)\)|-\s*(.+))$/);
+    if (roleMatch) {
+      saksiName = roleMatch[1].trim();
+      saksiRole = (roleMatch[2] || roleMatch[3] || '').trim();
+    }
+    saksiName = saksiName.replace(/^\(+|\)+$/g, '').trim();
+
+    viewMainSaksi.textContent = saksiName ? `( ${saksiName} )` : '';
+    if (viewMainSaksiRole) {
+      if (saksiRole) {
+        viewMainSaksiRole.textContent = `( ${saksiRole} )`;
+        viewMainSaksiRole.style.display = 'block';
+      } else {
+        viewMainSaksiRole.textContent = '';
+        viewMainSaksiRole.style.display = 'none';
+      }
+    }
 
     // Aturan Materai: >= 5 juta tampilkan slot materai pada mode polos
     if (numNominal >= 5000000) {

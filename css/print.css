@@ -527,12 +527,12 @@ body.preview-polos-mode .hatch-strip {
   color: #0b1728;
 }
 
-/* Kolom Saksi */
+/* Kolom Saksi / Mengetahui */
 .saksi-box {
   position: absolute;
-  top: 72mm;
-  left: 118mm;
-  width: 40mm;
+  top: 67mm;
+  left: 125mm;
+  width: 52mm;
   text-align: center;
   display: none;
   z-index: 10;
@@ -543,15 +543,29 @@ body.show-saksi .saksi-box {
 }
 
 .saksi-title {
-  font-size: 7.5pt;
+  font-size: calc(8pt * var(--font-scale, 1));
   font-style: italic;
+  font-family: var(--base-font);
   color: #1a4f72;
 }
 
 .field-saksi-nama {
-  margin-top: 13mm;
-  font-size: 8.5pt;
+  margin-top: 13.5mm;
+  font-size: calc(9.5pt * var(--font-scale, 1));
   font-weight: 700;
   font-family: var(--base-font);
   color: #0b1728;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+  text-align: center;
+}
+
+.field-saksi-role {
+  font-size: calc(8pt * var(--font-scale, 1));
+  font-weight: 600;
+  font-family: var(--base-font);
+  color: #334155;
+  margin-top: 0.8mm;
+  white-space: nowrap;
+  text-align: center;
 }
