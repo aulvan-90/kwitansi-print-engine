@@ -251,15 +251,28 @@ document.addEventListener('DOMContentLoaded', () => {
   pillModePolos.addEventListener('click', () => setPrintMode('polos'));
 
   // =========================================================================
-  // KALIBRASI PRINTER (OFFSET X, OFFSET Y, FONT)
+  // KALIBRASI PRINTER (OFFSET X, OFFSET Y, FONT SCALE & FAMILY)
   // =========================================================================
+  const inputCustomFont = document.getElementById('inputCustomFont');
+
+  function getActiveFontFamily() {
+    if (selectFontFamily.value === 'custom') {
+      const customVal = inputCustomFont.value.trim();
+      return customVal ? `'${customVal}', sans-serif` : "'JetBrains Mono', monospace";
+    }
+    return selectFontFamily.value;
+  }
+
   function applyCalibration(x, y, fontSize, fontFamily) {
     valOffsetX.textContent = `${x > 0 ? '+' : ''}${x} mm`;
     valOffsetY.textContent = `${y > 0 ? '+' : ''}${y} mm`;
     valFontSize.textContent = `${fontSize} pt`;
 
+    const fontScale = (fontSize / 10.5).toFixed(3);
+
     document.documentElement.style.setProperty('--offset-x', `${x}mm`);
     document.documentElement.style.setProperty('--offset-y', `${y}mm`);
+    document.documentElement.style.setProperty('--font-scale', fontScale);
     document.documentElement.style.setProperty('--base-font', fontFamily);
 
     // Update sheet offset preview (1mm ~ 3.78px di 96 DPI)
@@ -270,14 +283,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const x = parseFloat(sliderOffsetX.value) || 0;
     const y = parseFloat(sliderOffsetY.value) || 0;
     const fs = parseFloat(sliderFontSize.value) || 10.5;
-    const font = selectFontFamily.value;
+    const font = getActiveFontFamily();
     applyCalibration(x, y, fs, font);
   }
 
   sliderOffsetX.addEventListener('input', handleCalibrationChange);
   sliderOffsetY.addEventListener('input', handleCalibrationChange);
   sliderFontSize.addEventListener('input', handleCalibrationChange);
-  selectFontFamily.addEventListener('change', handleCalibrationChange);
+
+  selectFontFamily.addEventListener('change', () => {
+    if (selectFontFamily.value === 'custom') {
+      inputCustomFont.style.display = 'block';
+      inputCustomFont.focus();
+    } else {
+      inputCustomFont.style.display = 'none';
+    }
+    handleCalibrationChange();
+  });
+
+  inputCustomFont.addEventListener('input', handleCalibrationChange);
 
   btnSaveCalibration.addEventListener('click', () => {
     const calibData = {
@@ -285,6 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
       y: sliderOffsetY.value,
       fontSize: sliderFontSize.value,
       fontFamily: selectFontFamily.value,
+      customFont: inputCustomFont.value,
       penerima: inputPenerima.value,
       kota: inputKota.value
     };
@@ -299,7 +324,9 @@ document.addEventListener('DOMContentLoaded', () => {
     sliderOffsetX.value = 0;
     sliderOffsetY.value = 0;
     sliderFontSize.value = 10.5;
-    selectFontFamily.value = "'Courier New', Courier, monospace";
+    selectFontFamily.value = "'JetBrains Mono', monospace";
+    inputCustomFont.value = '';
+    inputCustomFont.style.display = 'none';
     handleCalibrationChange();
     localStorage.removeItem(CALIBRATION_STORAGE_KEY);
   });
@@ -312,7 +339,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data.x !== undefined) sliderOffsetX.value = data.x;
         if (data.y !== undefined) sliderOffsetY.value = data.y;
         if (data.fontSize !== undefined) sliderFontSize.value = data.fontSize;
-        if (data.fontFamily) selectFontFamily.value = data.fontFamily;
+        if (data.fontFamily) {
+          selectFontFamily.value = data.fontFamily;
+          if (data.fontFamily === 'custom') {
+            inputCustomFont.style.display = 'block';
+            if (data.customFont) inputCustomFont.value = data.customFont;
+          }
+        }
         if (data.penerima) inputPenerima.value = data.penerima;
         if (data.kota) inputKota.value = data.kota;
       } catch (err) {
