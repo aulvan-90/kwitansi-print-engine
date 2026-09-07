@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  kwitansi-print-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kwitansi-print-engine
+    restart: unless-stopped
+    ports:
+      - "3025:80"
+    environment:
+      - TZ=Asia/Jakarta
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    labels:
+      - "com.aulvan.service=kwitansi"
+      - "com.aulvan.domain=kwitansi.aulvan.com"
+      - "com.aulvan.port=3025"
