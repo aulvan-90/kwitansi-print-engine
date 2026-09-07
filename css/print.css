@@ -338,16 +338,16 @@ body.preview-polos-mode .hatch-strip {
 /* 3. Isian Terbilang Uang Sejumlah (Di Dalam Kotak Arsir) */
 .field-terbilang {
   position: absolute;
-  top: 28.2mm;
-  left: 96mm;
-  width: 144mm;
-  height: 8.8mm;
-  font-size: calc(9.5pt * var(--font-scale, 1));
+  top: 28.8mm;
+  left: 99.0mm;
+  width: 141mm;
+  height: 8.5mm;
+  font-size: calc(11.5pt * var(--font-scale, 1));
   font-weight: 700;
   font-style: italic;
   font-family: var(--base-font);
   color: #0b1728;
-  line-height: calc(4.4mm * var(--font-scale, 1));
+  line-height: calc(5.2mm * var(--font-scale, 1));
   display: flex;
   align-items: center;
   overflow: hidden;

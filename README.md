@@ -40,7 +40,7 @@ Mencetak data kwitansi menggunakan template dokumen biasa (Word / Excel / PDF bi
 | :--- | :---: | :---: | :--- |
 | **No. Kwitansi** | $X = 65\text{ mm}$, $Y = 10.2\text{ mm}$ | Lebar: `37 mm`, Font: `10 pt` Bold | Mengisi garis setelah label *"No."* |
 | **Telah Terima Dari** | $X = 100\text{ mm}$, $Y = 18.8\text{ mm}$ | Lebar: `140 mm`, Font: `10.5 pt` Bold | Teks nama/instansi pembayar di atas garis |
-| **Uang Sejumlah (Terbilang)** | $X = 96\text{ mm}$, $Y = 28.2\text{ mm}$ | Lebar: `144 mm`, Font: `9.5 pt` Italic Bold | Mengisi kolom arsir pengaman (*security hatch*) |
+| **Uang Sejumlah (Terbilang)** | $X = 99\text{ mm}$, $Y = 28.8\text{ mm}$ | Lebar: `141 mm`, Font: `11.5 pt` Italic Bold | Mengisi kolom arsir pengaman (*security hatch*) secara simetris |
 | **Untuk Pembayaran (Baris 1)** | $X = 99\text{ mm}$, $Y = 39.2\text{ mm}$ | Lebar: `141 mm`, Font: `9.5 pt` | Baris pertama setelah label *"Untuk pembayaran"* |
 | **Untuk Pembayaran (Baris 2)** | $X = 54\text{ mm}$, $Y = 46.8\text{ mm}$ | Lebar: `186 mm`, Font: `9.5 pt` | Sambungan baris kedua (lebar penuh) |
 | **Untuk Pembayaran (Baris 3)** | $X = 54\text{ mm}$, $Y = 54.0\text{ mm}$ | Lebar: `186 mm`, Font: `9.5 pt` | Sambungan baris ketiga (lebar penuh) |
