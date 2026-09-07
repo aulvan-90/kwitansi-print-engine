@@ -188,6 +188,7 @@ kwitansi-print-engine/
 
 ## 👤 Pengembang & Hak Cipta
 
+- **Creative**: Agung
 - **Pengembang**: Aulvan Server Team
 - **Email**: `aulvan90@gmail.com`
 - **Domain**: [kwitansi.aulvan.com](https://kwitansi.aulvan.com)
