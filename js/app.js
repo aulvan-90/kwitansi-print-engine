@@ -1,10 +1,9 @@
 /**
- * app.js - Controller Aplikasi Kwitansi Generator & Precision Print Engine
- * Menghubungkan form input, live preview 250x100mm, kalibrasi printer, dan format terbilang.
+ * app.js - Controller Presisi Kwitansi Generator (Sesuai Blangko Toko ATK 250x100mm)
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // DOM Elements - Input Form
+  // Input Fields
   const inputNo = document.getElementById('inputNo');
   const inputKota = document.getElementById('inputKota');
   const inputTerimaDari = document.getElementById('inputTerimaDari');
@@ -16,35 +15,38 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputSaksi = document.getElementById('inputSaksi');
   const groupSaksi = document.getElementById('groupSaksi');
 
-  // DOM Elements - Switches & Modes
+  // Modes & Switches
   const pillModeBlangko = document.getElementById('pillModeBlangko');
   const pillModePolos = document.getElementById('pillModePolos');
   const labelActiveMode = document.getElementById('labelActiveMode');
-  const chkIncludeStub = document.getElementById('chkIncludeStub');
+  const chkShowPhotoOverlay = document.getElementById('chkShowPhotoOverlay');
+  const groupOverlayOpacity = document.getElementById('groupOverlayOpacity');
+  const sliderOverlayOpacity = document.getElementById('sliderOverlayOpacity');
+  const valOverlayOpacity = document.getElementById('valOverlayOpacity');
+  const photoOverlayBg = document.getElementById('photoOverlayBg');
   const chkShowSaksi = document.getElementById('chkShowSaksi');
   const chkShowRulers = document.getElementById('chkShowRulers');
 
-  // DOM Elements - Live Preview Fields
+  // Preview Fields
   const viewStubNo = document.getElementById('viewStubNo');
   const viewStubTerima = document.getElementById('viewStubTerima');
-  const viewStubJumlah = document.getElementById('viewStubJumlah');
-  const viewStubUntuk = document.getElementById('viewStubUntuk');
-  const viewStubTanggal = document.getElementById('viewStubTanggal');
-  const viewStubPenerima = document.getElementById('viewStubPenerima');
+  const viewStubNominal = document.getElementById('viewStubNominal');
 
   const viewMainNo = document.getElementById('viewMainNo');
   const viewMainTerima = document.getElementById('viewMainTerima');
   const viewMainTerbilang = document.getElementById('viewMainTerbilang');
-  const viewMainUntuk = document.getElementById('viewMainUntuk');
-  const viewMainNominal = document.getElementById('viewMainNominal');
+  const viewUntukLine1 = document.getElementById('viewUntukLine1');
+  const viewUntukLine2 = document.getElementById('viewUntukLine2');
+  const viewUntukLine3 = document.getElementById('viewUntukLine3');
   const viewMainKota = document.getElementById('viewMainKota');
   const viewMainTanggal = document.getElementById('viewMainTanggal');
+  const viewMainNominal = document.getElementById('viewMainNominal');
   const viewMainPenerima = document.getElementById('viewMainPenerima');
   const viewMainSaksi = document.getElementById('viewMainSaksi');
-  const viewContainerSaksi = document.getElementById('viewContainerSaksi');
-  const viewMateraiBox = document.getElementById('viewMateraiBox');
+  const viewBoxSaksi = document.getElementById('viewBoxSaksi');
+  const viewMateraiSlot = document.getElementById('viewMateraiSlot');
 
-  // DOM Elements - Calibration
+  // Calibration Controls
   const kwitansiSheet = document.getElementById('kwitansiSheet');
   const sliderOffsetX = document.getElementById('sliderOffsetX');
   const sliderOffsetY = document.getElementById('sliderOffsetY');
@@ -56,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnSaveCalibration = document.getElementById('btnSaveCalibration');
   const btnResetCalibration = document.getElementById('btnResetCalibration');
 
-  // DOM Elements - Actions & Zoom
+  // Actions & Zoom
   const btnPrintPrimary = document.getElementById('btnPrintPrimary');
   const btnResetForm = document.getElementById('btnResetForm');
   const btnSampleData = document.getElementById('btnSampleData');
@@ -67,11 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const textZoomLevel = document.getElementById('textZoomLevel');
 
   let currentZoom = 1.0;
-  const CALIBRATION_STORAGE_KEY = 'aulvan_kwitansi_calibration_v2';
+  const CALIBRATION_STORAGE_KEY = 'kwitansi_calibration_exact_v3';
 
-  // =========================================================================
-  // HELPER FORMATTING
-  // =========================================================================
+  // Helper Bulan Indonesia
   const bulanIndo = [
     'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
     'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
@@ -97,6 +97,43 @@ document.addEventListener('DOMContentLoaded', () => {
     return parseInt(angkaStr.replace(/\D/g, ''), 10) || 0;
   }
 
+  /**
+   * Pembagi teks cerdas untuk 3 baris fisik blangko "Untuk Pembayaran":
+   * Baris 1: setelah label "Untuk pembayaran" (lebar ~144mm, max ~65 char)
+   * Baris 2: baris penuh (lebar ~190mm, max ~85 char)
+   * Baris 3: baris penuh (lebar ~190mm, max ~85 char)
+   */
+  function splitUntukPembayaran(text) {
+    if (!text) return ['', '', ''];
+
+    // Jika user menekan enter secara eksplisit
+    const manualLines = text.split('\n');
+    if (manualLines.length > 1) {
+      return [
+        manualLines[0] || '',
+        manualLines[1] || '',
+        manualLines.slice(2).join(' ') || ''
+      ];
+    }
+
+    const words = text.trim().split(/\s+/);
+    let line1 = '', line2 = '', line3 = '';
+    const MAX_LINE_1 = 62;
+    const MAX_LINE_2 = 85;
+
+    for (const w of words) {
+      if ((line1 + ' ' + w).trim().length <= MAX_LINE_1 && !line2) {
+        line1 = (line1 + ' ' + w).trim();
+      } else if ((line2 + ' ' + w).trim().length <= MAX_LINE_2 && !line3) {
+        line2 = (line2 + ' ' + w).trim();
+      } else {
+        line3 = (line3 + ' ' + w).trim();
+      }
+    }
+
+    return [line1, line2, line3];
+  }
+
   // =========================================================================
   // SINKRONISASI FORM KE PREVIEW
   // =========================================================================
@@ -108,40 +145,43 @@ document.addEventListener('DOMContentLoaded', () => {
     const numNominal = parseAngka(rawNominal);
     const nominalFmt = numNominal > 0 ? formatRibuan(rawNominal) + ',-' : '-';
     const terbilangText = formatTerbilangKwitansi(numNominal) || '# Nol Rupiah #';
-    const untuk = inputUntuk.value.trim() || '-';
+    const untukText = inputUntuk.value.trim();
     const tanggal = inputTanggal.value.trim() || getFormattedToday();
     const penerima = inputPenerima.value.trim() || 'SUPRIYATNA';
     const saksi = inputSaksi.value.trim() || '-';
 
-    // Update Bonggol / Stub
+    const [l1, l2, l3] = splitUntukPembayaran(untukText);
+
+    // Update Lembar Bonggol
     viewStubNo.textContent = no;
     viewStubTerima.textContent = terima;
-    viewStubJumlah.textContent = nominalFmt;
-    viewStubUntuk.textContent = untuk;
-    viewStubTanggal.textContent = tanggal;
-    viewStubPenerima.textContent = `( ${penerima} )`;
+    viewStubNominal.textContent = nominalFmt;
 
     // Update Kwitansi Utama
     viewMainNo.textContent = no;
     viewMainTerima.textContent = terima;
     viewMainTerbilang.textContent = terbilangText;
     feedbackTerbilang.textContent = terbilangText;
-    viewMainUntuk.textContent = untuk;
+
+    viewUntukLine1.textContent = l1;
+    viewUntukLine2.textContent = l2;
+    viewUntukLine3.textContent = l3;
+
     viewMainNominal.textContent = nominalFmt;
     viewMainKota.textContent = kota;
     viewMainTanggal.textContent = tanggal;
     viewMainPenerima.textContent = `( ${penerima} )`;
     viewMainSaksi.textContent = `( ${saksi} )`;
 
-    // Aturan Materai: Transaksi >= Rp 5.000.000 membutuhkan materai Rp 10.000
+    // Aturan Materai: >= 5 juta tampilkan slot materai pada mode polos
     if (numNominal >= 5000000) {
-      viewMateraiBox.style.display = 'flex';
+      viewMateraiSlot.style.display = 'flex';
     } else {
-      viewMateraiBox.style.display = 'none';
+      viewMateraiSlot.style.display = 'none';
     }
   }
 
-  // Format otomatis saat input nominal uang
+  // Event Listener Input Nominal Uang
   inputNominal.addEventListener('input', (e) => {
     const cursorPosition = e.target.selectionStart;
     const oldLength = e.target.value.length;
@@ -158,14 +198,12 @@ document.addEventListener('DOMContentLoaded', () => {
     updatePreview();
   });
 
-  // Event listener untuk input lainnya
+  // Event Listener Input Lainnya
   [inputNo, inputKota, inputTerimaDari, inputUntuk, inputTanggal, inputPenerima, inputSaksi].forEach(el => {
     el.addEventListener('input', updatePreview);
   });
 
-  // =========================================================================
-  // TOGGLE SAKSI & BONGGOL
-  // =========================================================================
+  // Toggle Saksi
   chkShowSaksi.addEventListener('change', (e) => {
     if (e.target.checked) {
       document.body.classList.add('show-saksi');
@@ -176,12 +214,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  chkIncludeStub.addEventListener('change', (e) => {
-    if (e.target.checked) {
-      document.body.classList.remove('hide-stub-print');
-    } else {
-      document.body.classList.add('hide-stub-print');
-    }
+  // Toggle & Slider Overlay Blangko Asli
+  chkShowPhotoOverlay.addEventListener('change', (e) => {
+    photoOverlayBg.style.display = e.target.checked ? 'block' : 'none';
+    groupOverlayOpacity.style.display = e.target.checked ? 'block' : 'none';
+  });
+
+  sliderOverlayOpacity.addEventListener('input', (e) => {
+    const val = e.target.value;
+    valOverlayOpacity.textContent = `${val}%`;
+    photoOverlayBg.style.opacity = (val / 100).toFixed(2);
   });
 
   // =========================================================================
@@ -194,12 +236,14 @@ document.addEventListener('DOMContentLoaded', () => {
       pillModeBlangko.classList.add('active');
       pillModePolos.classList.remove('active');
       labelActiveMode.innerHTML = '<span style="color:#10b981;">●</span> Mode: Blangko Toko (Hanya Teks Isian)';
+      photoOverlayBg.style.opacity = (sliderOverlayOpacity.value / 100).toFixed(2);
     } else {
       document.body.classList.remove('print-mode-blangko', 'preview-blangko-mode');
       document.body.classList.add('print-mode-polos', 'preview-polos-mode');
       pillModePolos.classList.add('active');
       pillModeBlangko.classList.remove('active');
-      labelActiveMode.innerHTML = '<span style="color:#06b6d4;">●</span> Mode: Kertas Putih Polos (Full Border)';
+      labelActiveMode.innerHTML = '<span style="color:#06b6d4;">●</span> Mode: Kertas Putih Polos (Full Motif Biru)';
+      photoOverlayBg.style.opacity = '1';
     }
   }
 
@@ -207,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
   pillModePolos.addEventListener('click', () => setPrintMode('polos'));
 
   // =========================================================================
-  // ENGINE KALIBRASI PRINTER (OFFSET X, OFFSET Y, FONT)
+  // KALIBRASI PRINTER (OFFSET X, OFFSET Y, FONT)
   // =========================================================================
   function applyCalibration(x, y, fontSize, fontFamily) {
     valOffsetX.textContent = `${x > 0 ? '+' : ''}${x} mm`;
@@ -218,19 +262,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.documentElement.style.setProperty('--offset-y', `${y}mm`);
     document.documentElement.style.setProperty('--base-font', fontFamily);
 
-    // Apply preview font-size to printed elements
-    const printedElements = document.querySelectorAll('.printed-field');
-    const baseRatio = fontSize / 10;
-    kwitansiSheet.style.setProperty('--font-scale', baseRatio);
-
-    // Update sheet offset preview
+    // Update sheet offset preview (1mm ~ 3.78px di 96 DPI)
     kwitansiSheet.style.transform = `translate(${x * 3.78}px, ${y * 3.78}px)`;
   }
 
   function handleCalibrationChange() {
     const x = parseFloat(sliderOffsetX.value) || 0;
     const y = parseFloat(sliderOffsetY.value) || 0;
-    const fs = parseFloat(sliderFontSize.value) || 10;
+    const fs = parseFloat(sliderFontSize.value) || 10.5;
     const font = selectFontFamily.value;
     applyCalibration(x, y, fs, font);
   }
@@ -240,35 +279,31 @@ document.addEventListener('DOMContentLoaded', () => {
   sliderFontSize.addEventListener('input', handleCalibrationChange);
   selectFontFamily.addEventListener('change', handleCalibrationChange);
 
-  // Simpan ke LocalStorage
   btnSaveCalibration.addEventListener('click', () => {
     const calibData = {
       x: sliderOffsetX.value,
       y: sliderOffsetY.value,
       fontSize: sliderFontSize.value,
       fontFamily: selectFontFamily.value,
-      includeStub: chkIncludeStub.checked,
       penerima: inputPenerima.value,
       kota: inputKota.value
     };
     localStorage.setItem(CALIBRATION_STORAGE_KEY, JSON.stringify(calibData));
     btnSaveCalibration.innerHTML = '✓ Tersimpan!';
     setTimeout(() => {
-      btnSaveCalibration.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Simpan Setelan`;
+      btnSaveCalibration.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Simpan ke Browser`;
     }, 1500);
   });
 
-  // Reset Kalibrasi
   btnResetCalibration.addEventListener('click', () => {
     sliderOffsetX.value = 0;
     sliderOffsetY.value = 0;
-    sliderFontSize.value = 10;
+    sliderFontSize.value = 10.5;
     selectFontFamily.value = "'Courier New', Courier, monospace";
     handleCalibrationChange();
     localStorage.removeItem(CALIBRATION_STORAGE_KEY);
   });
 
-  // Muat Kalibrasi Tersimpan
   function loadSavedCalibration() {
     const saved = localStorage.getItem(CALIBRATION_STORAGE_KEY);
     if (saved) {
@@ -278,10 +313,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data.y !== undefined) sliderOffsetY.value = data.y;
         if (data.fontSize !== undefined) sliderFontSize.value = data.fontSize;
         if (data.fontFamily) selectFontFamily.value = data.fontFamily;
-        if (data.includeStub !== undefined) {
-          chkIncludeStub.checked = data.includeStub;
-          chkIncludeStub.dispatchEvent(new Event('change'));
-        }
         if (data.penerima) inputPenerima.value = data.penerima;
         if (data.kota) inputKota.value = data.kota;
       } catch (err) {
@@ -305,7 +336,6 @@ document.addEventListener('DOMContentLoaded', () => {
   btnZoomFit.addEventListener('click', () => {
     const container = document.querySelector('.preview-canvas-container');
     const width = container.clientWidth - 100;
-    // 250mm ~ 945px at 96 DPI
     const targetScale = Math.min(width / 945, 1.0);
     setZoom(targetScale);
   });
@@ -321,7 +351,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // TOMBOL AKSI
   // =========================================================================
   btnPrintPrimary.addEventListener('click', () => {
-    // Pastikan sync data preview sebelum cetak
     updatePreview();
     window.print();
   });
@@ -342,13 +371,13 @@ document.addEventListener('DOMContentLoaded', () => {
     inputTerimaDari.value = 'PT. TEKNOLOGI CIPTA MANDIRI NUSANTARA';
     inputNominal.value = '150.000.000';
     inputNominal.dispatchEvent(new Event('input'));
-    inputUntuk.value = 'Pelunasan invoice termin 2 pengadaan perlengkapan IT & sistem cloud server';
+    inputUntuk.value = 'Pelunasan invoice termin kedua pengadaan server & infrastruktur jaringan sistem cloud';
     inputTanggal.value = getFormattedToday();
     inputPenerima.value = 'SUPRIYATNA';
     updatePreview();
   });
 
-  // Keyboard shortcut Ctrl+P / Cmd+P
+  // Shortcut Cetak Ctrl+P / Cmd+P
   window.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
       e.preventDefault();

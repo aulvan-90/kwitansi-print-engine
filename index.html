@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kwitansi Generator & Precision Print Engine (250 x 100 mm)</title>
+  <title>Kwitansi Generator & Precision Print Engine (250 × 100 mm)</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,8 +27,8 @@
       <div class="brand-logo">🧾</div>
       <div>
         <div class="brand-title">
-          Kwitansi Engine
-          <span class="brand-badge">250×100 mm</span>
+          Kwitansi Precision Engine
+          <span class="brand-badge">250×100 mm ATK</span>
         </div>
         <div class="target-host-pill">
           <span class="dot"></span>
@@ -50,7 +50,7 @@
 
       <button type="button" class="btn btn-primary" id="btnPrintPrimary" title="Cetak Kwitansi Langsung (Ctrl + P)">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-        <span>Cetak Kwitansi</span>
+        <span>Cetak Kwitansi (Ctrl+P)</span>
       </button>
     </div>
   </header>
@@ -75,30 +75,38 @@
 
           <div class="mode-pill-selector">
             <div class="mode-pill active" id="pillModeBlangko" data-mode="blangko">
-              <div style="font-weight: 700; margin-bottom: 2px;">Blangko Toko</div>
-              <div style="font-size: 0.68rem; opacity: 0.85;">Hanya Teks Isian</div>
+              <div style="font-weight: 700; margin-bottom: 2px;">Cetak ke Blangko Toko</div>
+              <div style="font-size: 0.68rem; opacity: 0.85;">Hanya Teks Isian Murni</div>
             </div>
             <div class="mode-pill" id="pillModePolos" data-mode="polos">
-              <div style="font-weight: 700; margin-bottom: 2px;">Kertas Polos</div>
-              <div style="font-size: 0.68rem; opacity: 0.85;">Full Border & Garis</div>
+              <div style="font-weight: 700; margin-bottom: 2px;">Cetak Kertas Polos</div>
+              <div style="font-size: 0.68rem; opacity: 0.85;">Full Border & Motif Biru</div>
             </div>
           </div>
 
           <div class="toggle-group">
             <div class="toggle-label">
-              <span>Cetak Bonggol (Stub Kiri)</span>
-              <span class="toggle-sub">Sertakan arsip lembar kiri (0-64mm)</span>
+              <span>Transparansi Blangko Asli (Pratinjau)</span>
+              <span class="toggle-sub">Tampilkan foto scan kertas fisik untuk uji presisi</span>
             </div>
             <label class="switch">
-              <input type="checkbox" id="chkIncludeStub" checked>
+              <input type="checkbox" id="chkShowPhotoOverlay" checked>
               <span class="slider"></span>
             </label>
+          </div>
+
+          <div class="form-group" id="groupOverlayOpacity" style="margin-top: 0.5rem;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-secondary); margin-bottom: 0.25rem;">
+              <span>Kepekatan Overlay Blangko</span>
+              <span id="valOverlayOpacity" style="font-family: var(--font-mono); color: var(--accent-cyan);">80%</span>
+            </div>
+            <input type="range" id="sliderOverlayOpacity" min="10" max="100" step="5" value="80">
           </div>
 
           <div class="toggle-group">
             <div class="toggle-label">
               <span>Kolom Saksi / Mengetahui</span>
-              <span class="toggle-sub">Tampilkan tanda tangan pihak kedua</span>
+              <span class="toggle-sub">Tampilkan kolom tanda tangan kedua</span>
             </div>
             <label class="switch">
               <input type="checkbox" id="chkShowSaksi">
@@ -110,23 +118,23 @@
         <!-- CARD 2: FORM DATA KWITANSI -->
         <section class="card">
           <div class="card-title">
-            <span>2. Rincian Kwitansi</span>
+            <span>2. Rincian Isian Kwitansi</span>
             <span style="font-size: 0.65rem; color: var(--text-muted);">LIVE SYNC</span>
           </div>
 
           <div class="form-row">
             <div class="form-group" style="flex: 1.2;">
               <label for="inputNo">Nomor Kwitansi</label>
-              <input type="text" id="inputNo" class="input-control" placeholder="No. KW/2026/09/001" value="KW/2026/09/001">
+              <input type="text" id="inputNo" class="input-control" placeholder="KW/2026/09/001" value="KW/2026/09/001">
             </div>
             <div class="form-group" style="flex: 1;">
-              <label for="inputKota">Tempat / Kota</label>
+              <label for="inputKota">Kota / Lokasi</label>
               <input type="text" id="inputKota" class="input-control" placeholder="Jakarta" value="Jakarta">
             </div>
           </div>
 
           <div class="form-group">
-            <label for="inputTerimaDari">Telah Terima Dari <span class="label-desc">(Nama / Instansi / Perusahaan)</span></label>
+            <label for="inputTerimaDari">Telah Terima Dari <span class="label-desc">(Nama / Perusahaan)</span></label>
             <input type="text" id="inputTerimaDari" class="input-control" placeholder="Contoh: PT. SINAR JAYA ABADI MANDIRI" value="PT. SINAR JAYA ABADI MANDIRI">
           </div>
 
@@ -136,15 +144,15 @@
               <span class="currency-prefix">Rp</span>
               <input type="text" id="inputNominal" class="input-control input-currency" placeholder="100.000.000" value="100.000.000">
             </div>
-            <!-- Live Terbilang Feedback -->
+            <!-- Terbilang Otomatis -->
             <div class="terbilang-box" id="feedbackTerbilang">
               # Seratus Juta Rupiah #
             </div>
           </div>
 
           <div class="form-group">
-            <label for="inputUntuk">Untuk Pembayaran <span class="label-desc">(Keterangan transaksi)</span></label>
-            <textarea id="inputUntuk" class="input-control" rows="2" placeholder="Pelunasan pekerjaan instalasi jaringan & infrastruktur server"></textarea>
+            <label for="inputUntuk">Untuk Pembayaran <span class="label-desc">(Mendukung hingga 3 baris teks)</span></label>
+            <textarea id="inputUntuk" class="input-control" rows="3" placeholder="Pembayaran pekerjaan instalasi server dan pemeliharaan jaringan cloud termin kedua."></textarea>
           </div>
 
           <div class="form-row">
@@ -153,7 +161,7 @@
               <input type="text" id="inputTanggal" class="input-control" placeholder="07 September 2026">
             </div>
             <div class="form-group">
-              <label for="inputPenerima">Nama Penerima</label>
+              <label for="inputPenerima">Nama Yang Bertanda Tangan</label>
               <input type="text" id="inputPenerima" class="input-control" placeholder="SUPRIYATNA" value="SUPRIYATNA">
             </div>
           </div>
@@ -164,14 +172,14 @@
           </div>
         </section>
 
-        <!-- CARD 3: KALIBRASI FISIK PRINTER (SANGAT PENTING EPSON/HP/CANON) -->
+        <!-- CARD 3: KALIBRASI FISIK PRINTER -->
         <section class="card calibration-card">
           <div class="card-title">
             <span>3. Kalibrasi Offset Printer</span>
             <span style="font-size: 0.65rem; color: var(--accent-cyan);">EPSON / ATK PRESET</span>
           </div>
           <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.75rem;">
-            Sesuaikan bila cetakan fisik printer Anda sedikit bergeser beberapa milimeter dari garis blangko.
+            Gunakan penggeser di bawah jika tarikan kertas printer Anda bergeser 1-2 mm dari garis blangko fisik.
           </p>
 
           <div class="calibration-grid">
@@ -193,15 +201,15 @@
 
             <div class="calib-item">
               <div class="calib-header">
-                <span>Ukuran Huruf (Font)</span>
-                <span class="calib-value" id="valFontSize">10 pt</span>
+                <span>Ukuran Font Isian</span>
+                <span class="calib-value" id="valFontSize">10.5 pt</span>
               </div>
-              <input type="range" id="sliderFontSize" min="8" max="14" step="0.5" value="10">
+              <input type="range" id="sliderFontSize" min="8" max="14" step="0.5" value="10.5">
             </div>
 
             <div class="calib-item">
               <div class="calib-header">
-                <span>Jenis Font Isian</span>
+                <span>Font Type</span>
               </div>
               <select id="selectFontFamily" class="input-control" style="padding: 0.2rem 0.4rem; font-size: 0.75rem; height: 26px;">
                 <option value="'Courier New', Courier, monospace">Courier (Mesin Ketik)</option>
@@ -214,7 +222,7 @@
           <div style="display: flex; gap: 0.5rem; margin-top: 0.85rem;">
             <button type="button" class="btn btn-secondary btn-sm" id="btnSaveCalibration" style="flex: 1;">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-              Simpan Setelan
+              Simpan ke Browser
             </button>
             <button type="button" class="btn btn-secondary btn-sm" id="btnResetCalibration">
               Reset 0 mm
@@ -233,13 +241,13 @@
       <div class="preview-toolbar no-print">
         <div class="preview-status">
           <span>Pratinjau Lembar Fisik:</span>
-          <span class="spec-badge">250 mm × 100 mm (Landscape)</span>
+          <span class="spec-badge">250 mm × 100 mm</span>
           <span id="labelActiveMode" style="font-weight: 600; color: #34d399;">● Mode: Blangko Toko</span>
         </div>
 
         <div class="preview-zoom-controls">
           <label style="margin: 0 0.5rem 0 0; display: flex; align-items: center; gap: 4px; font-size: 0.72rem; cursor: pointer;">
-            <input type="checkbox" id="chkShowRulers" checked> Penggaris (Ruler)
+            <input type="checkbox" id="chkShowRulers" checked> Penggaris (mm)
           </label>
           <button type="button" class="zoom-btn" id="btnZoomOut" title="Perkecil">−</button>
           <span class="zoom-level-text" id="textZoomLevel">100%</span>
@@ -257,11 +265,11 @@
           <div class="ruler-overlay ruler-guide" id="rulerX">
             <span>0mm</span>
             <span>25mm</span>
-            <span>50mm</span>
-            <span>75mm (Pemisah Bonggol)</span>
-            <span>125mm</span>
-            <span>175mm</span>
-            <span>220mm</span>
+            <span>43mm (Perforasi)</span>
+            <span>75mm</span>
+            <span>100mm</span>
+            <span>150mm</span>
+            <span>200mm</span>
             <span>250mm</span>
           </div>
           <div class="ruler-overlay-y ruler-guide" id="rulerY">
@@ -277,95 +285,79 @@
                ================================================================ -->
           <div class="kwitansi-sheet" id="kwitansiSheet">
             
-            <!-- Ornamen Bingkai Guilloche (Mode Kertas Putih) -->
-            <div class="guilloche-border ornament"></div>
-            <div class="inner-border ornament"></div>
-            <div class="perforation-line ornament"></div>
+            <!-- Foto Asli Blangko Toko (Untuk Pratinjau Presisi & Mode Kertas Polos) -->
+            <div class="overlay-bg-image ornament" id="photoOverlayBg"></div>
+
+            <!-- Frame Bonggol & Perforasi -->
+            <div class="stub-frame ornament"></div>
+            <div class="perforation-border ornament"></div>
 
             <!-- ==============================================================
-                 BAGIAN KIRI: BONGGOL / STUB (0 - 64mm)
+                 BAGIAN 1: BONGGOL KIRI (0 - 43mm)
                  ============================================================== -->
             <div class="kwitansi-stub">
-              <div class="stub-title static-label">KWITANSI</div>
-              <div class="stub-row-no static-label">No.</div>
               <div class="stub-field-no printed-field" id="viewStubNo">KW/2026/09/001</div>
-
-              <div class="stub-row-terima static-label">Terima dari:</div>
               <div class="stub-field-terima printed-field" id="viewStubTerima">PT. SINAR JAYA ABADI MANDIRI</div>
-
-              <div class="stub-row-jumlah static-label">Jumlah Rp.</div>
-              <div class="stub-field-jumlah printed-field" id="viewStubJumlah">100.000.000,-</div>
-
-              <div class="stub-row-untuk static-label">Untuk:</div>
-              <div class="stub-field-untuk printed-field" id="viewStubUntuk">Pelunasan pekerjaan instalasi jaringan server</div>
-
-              <div class="stub-date-sig">
-                <div class="stub-field-date printed-field" id="viewStubTanggal">07 September 2026</div>
-                <div class="stub-sig-box printed-field" id="viewStubPenerima">( SUPRIYATNA )</div>
-              </div>
+              <div class="stub-field-nominal printed-field" id="viewStubNominal">100.000.000,-</div>
             </div>
 
             <!-- ==============================================================
-                 BAGIAN KANAN: KWITANSI UTAMA (66 - 248mm)
+                 BAGIAN 2: KWITANSI UTAMA (44 - 250mm)
+                 Sesuai Persis dengan Pola Blangko Toko Asli
                  ============================================================== -->
             <div class="kwitansi-main">
-              <!-- Judul Kwitansi -->
-              <div class="main-header-title static-label">KWITANSI</div>
 
-              <!-- Nomor Kwitansi -->
-              <div class="main-no-box static-label">No. :</div>
+              <!-- Baris 1: No. -->
+              <div class="label-no static-label">No.</div>
+              <div class="line-no static-line"></div>
               <div class="field-no printed-field" id="viewMainNo">KW/2026/09/001</div>
 
-              <!-- Baris 1: Sudah Terima Dari -->
-              <div class="row-terima">
-                <div class="label-terima static-label">Sudah terima dari :</div>
-                <div class="dotted-lead dotted-lead-1 ornament"></div>
-                <div class="field-terima printed-field" id="viewMainTerima">PT. SINAR JAYA ABADI MANDIRI</div>
+              <!-- Baris 2: Telah terima dari -->
+              <div class="label-terima static-label">Telah terima dari</div>
+              <div class="line-terima static-line"></div>
+              <div class="field-terima printed-field" id="viewMainTerima">PT. SINAR JAYA ABADI MANDIRI</div>
+
+              <!-- Baris 3: Uang sejumlah (Terbilang) -->
+              <div class="label-uang static-label">Uang sejumlah</div>
+              <div class="hatch-uang hatch-strip"></div>
+              <div class="field-terbilang printed-field" id="viewMainTerbilang"># Seratus Juta Rupiah #</div>
+
+              <!-- Baris 4: Untuk pembayaran (3 Baris Garis) -->
+              <div class="label-untuk static-label">Untuk pembayaran</div>
+              <div class="line-untuk-1 static-line"></div>
+              <div class="line-untuk-2 static-line"></div>
+              <div class="line-untuk-3 static-line"></div>
+
+              <!-- Teks Isian 3 Baris Untuk Pembayaran -->
+              <div class="field-untuk-line-1 printed-field" id="viewUntukLine1">Pembayaran pekerjaan instalasi server</div>
+              <div class="field-untuk-line-2 printed-field" id="viewUntukLine2">dan pemeliharaan jaringan cloud termin kedua</div>
+              <div class="field-untuk-line-3 printed-field" id="viewUntukLine3"></div>
+
+              <!-- Baris 5: Garis Tanggal & Tempat Transaksi -->
+              <div class="line-tanggal static-line"></div>
+              <div class="field-tanggal-tempat printed-field" id="viewMainTanggalTempat">
+                <span id="viewMainKota">Jakarta</span>, <span id="viewMainTanggal">07 September 2026</span>
               </div>
 
-              <!-- Baris 2: Banyaknya Uang (Terbilang) -->
-              <div class="row-terbilang">
-                <div class="label-terbilang static-label">Banyaknya Uang :</div>
-                <div class="terbilang-ornament-box ornament"></div>
-                <div class="field-terbilang printed-field" id="viewMainTerbilang"># Seratus Juta Rupiah #</div>
+              <!-- Baris 6: Rp. & Kotak Nominal Angka -->
+              <div class="label-rp static-label">Rp.</div>
+              <div class="hatch-rp hatch-strip"></div>
+              <div class="field-nominal printed-field" id="viewMainNominal">100.000.000,-</div>
+
+              <!-- Kolom Saksi / Mengetahui (Opsional) -->
+              <div class="saksi-box" id="viewBoxSaksi">
+                <div class="saksi-title static-label">Saksi / Mengetahui,</div>
+                <div class="field-saksi-nama printed-field" id="viewMainSaksi">( HENDRA WIJAYA )</div>
               </div>
 
-              <!-- Baris 3: Untuk Pembayaran -->
-              <div class="row-untuk">
-                <div class="label-untuk static-label">Untuk Pembayaran :</div>
-                <div class="dotted-lead dotted-lead-1 ornament"></div>
-                <div class="dotted-lead dotted-lead-2 ornament"></div>
-                <div class="field-untuk printed-field" id="viewMainUntuk">Pelunasan pekerjaan instalasi jaringan & infrastruktur server</div>
-              </div>
-
-              <!-- Kotak Nominal Rp (Kiri Bawah) -->
-              <div class="bottom-nominal-container">
-                <div class="nominal-outer-box static-box">
-                  <span class="nominal-label-rp static-label">Jumlah Rp.</span>
-                </div>
-                <div class="field-nominal-angka printed-field" id="viewMainNominal">100.000.000,-</div>
-              </div>
-
-              <!-- Saksi / Mengetahui (Tengah Bawah, Opsional) -->
-              <div class="bottom-saksi-container" id="viewContainerSaksi">
-                <div class="saksi-title static-label">Mengetahui / Saksi,</div>
-                <div class="field-saksi-name printed-field" id="viewMainSaksi">( HENDRA WIJAYA )</div>
-              </div>
-
-              <!-- Area Tanda Tangan & Tanggal (Kanan Bawah) -->
-              <div class="bottom-signature-container">
-                <div class="field-date-location printed-field">
-                  <span id="viewMainKota">Jakarta</span>, <span id="viewMainTanggal">07 September 2026</span>
-                </div>
-
-                <!-- Materai Box (Hanya terlihat di mode kertas polos jika nominal >= 5 juta) -->
-                <div class="materai-box ornament" id="viewMateraiBox">
-                  MATERAI<br>TEMPEL<br>Rp 10.000
+              <!-- Area Tanda Tangan & Penerima (Kanan Bawah) -->
+              <div class="signature-box">
+                <!-- Slot Materai (Mode Kertas Polos jika >= 5jt) -->
+                <div class="materai-slot ornament" id="viewMateraiSlot" style="display: none;">
+                  MATERAI<br>10.000
                 </div>
 
-                <div class="signature-space"></div>
-
-                <div class="field-signer-name printed-field" id="viewMainPenerima">
+                <div class="field-penerima-nama printed-field" id="viewMainPenerima">
                   ( SUPRIYATNA )
                 </div>
               </div>
