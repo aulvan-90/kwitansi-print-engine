@@ -700,7 +700,6 @@ body.preview-blangko-mode .nominal-outer-box {
 body.preview-blangko-mode .printed-field {
   color: #0b1728 !important;
   font-weight: 800;
-  text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);
 }
 
 /* Mode Kertas Polos in Preview */

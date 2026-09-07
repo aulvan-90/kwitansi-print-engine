@@ -100,10 +100,34 @@
     display: none !important;
   }
 
+  /* Reset total bayangan, filter, outline & background agar TIDAK ADA KOTAK ABU-ABU */
+  *, *::before, *::after {
+    text-shadow: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .printed-field,
+  .printed-field * {
+    background: transparent !important;
+    background-color: transparent !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+    outline: none !important;
+    border: none !important;
+  }
+
   body.print-mode-blangko .printed-field {
     visibility: visible !important;
     color: #000000 !important;
     -webkit-text-fill-color: #000000 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    filter: none !important;
   }
 
   /* ========================================================================
@@ -411,13 +435,13 @@ body.preview-polos-mode .hatch-strip {
 }
 
 /* 6. Isian Kotak Nominal Angka (Rp. 100.000.000,-)
-   Pas Tepat di Tengah Vertikal & Horizontal Kotak Arsir Blangko Toko */
+   Disesuaikan naik ke atas agar pas tepat di tengah kotak arsir Rp. blangko */
 .field-nominal {
   position: absolute;
-  top: 78.6mm;
+  top: 75.2mm;
   left: 72.5mm;
   width: 50.0mm;
-  height: 10.0mm;
+  height: 8.5mm;
   font-size: calc(12.5pt * var(--font-scale, 1));
   font-weight: 800;
   font-family: var(--base-font);
