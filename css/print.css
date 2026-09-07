@@ -435,13 +435,13 @@ body.preview-polos-mode .hatch-strip {
 }
 
 /* 6. Isian Kotak Nominal Angka (Rp. 100.000.000,-)
-   Disesuaikan naik ke atas agar pas tepat di tengah kotak arsir Rp. blangko */
+   Disesuaikan pas di tengah kotak arsir Rp. blangko toko */
 .field-nominal {
   position: absolute;
-  top: 75.2mm;
+  top: 78.0mm;
   left: 72.5mm;
   width: 50.0mm;
-  height: 8.5mm;
+  height: 10.0mm;
   font-size: calc(12.5pt * var(--font-scale, 1));
   font-weight: 800;
   font-family: var(--base-font);
