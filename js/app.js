@@ -387,6 +387,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Inisialisasi awal
   inputTanggal.value = getFormattedToday();
+  if (!inputUntuk.value) {
+    inputUntuk.value = 'Pembayaran pelunasan pekerjaan instalasi perangkat keras server dan pemeliharaan infrastruktur jaringan cloud.';
+  }
   loadSavedCalibration();
   updatePreview();
 });

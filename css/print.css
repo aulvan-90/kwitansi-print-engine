@@ -1,12 +1,6 @@
 /* ==========================================================================
    KWITANSI PRINT ENGINE - EXACT BLANGKO PHYSICAL PRINT STYLESHEET
    Kertas: 250mm x 100mm Landscape (Standar Blangko Kwitansi Toko ATK Indonesia)
-   Ukuran Fisik Berdasarkan Scan Blangko Asli:
-   - Lebar Total: 250mm
-   - Tinggi Total: 100mm
-   - Bonggol Kiri: 0mm - 43mm
-   - Perforasi Pemisah: 43mm
-   - Kwitansi Utama: 44mm - 250mm
    ========================================================================== */
 
 @page {
@@ -18,11 +12,11 @@
   --offset-x: 0mm;
   --offset-y: 0mm;
   --font-scale: 1;
-  --base-font: 'Courier New', Courier, monospace, 'Times New Roman', serif;
+  --base-font: 'JetBrains Mono', 'Courier New', Courier, monospace;
 }
 
 @media print {
-  /* Hilangkan margin browser & header/footer halaman URL */
+  /* Reset total margin & padding browser */
   html, body {
     width: 250mm !important;
     height: 100mm !important;
@@ -83,8 +77,8 @@
 
   /* ========================================================================
      MODE 1: CETAK KE BLANGKO TOKO (DEFAULT)
-     Sembunyikan semua ornamen, bingkai, garis titik, dan teks paten cetak pabrik.
-     HANYA MENCETAK DATA ISIAN TEKS MURNI.
+     Sembunyikan seluruh motif, garis, dan teks statis bawaan blangko toko.
+     HANYA MENCETAK DATA ISIAN TEKS MURNI AGAR PAS TEPAT DI ATAS BLANGKO FISIK.
      ======================================================================== */
   body.print-mode-blangko .kwitansi-sheet {
     background: transparent !important;
@@ -96,7 +90,7 @@
   body.print-mode-blangko .hatch-strip,
   body.print-mode-blangko .stub-frame,
   body.print-mode-blangko .perforation-border,
-  body.print-mode-blangko .guilloche-bg {
+  body.print-mode-blangko .overlay-bg-image {
     visibility: hidden !important;
     opacity: 0 !important;
     display: none !important;
@@ -108,31 +102,26 @@
     -webkit-text-fill-color: #000000 !important;
   }
 
-  body.hide-stub-print .kwitansi-stub {
-    display: none !important;
-  }
-
   /* ========================================================================
      MODE 2: CETAK KE KERTAS PUTIH POLOS (HVS 250x100mm)
-     Cetak ornamen lengkap menyerupai blangko asli toko ATK biru
+     Cetak ornamen lengkap (atau foto blangko beresolusi tajam)
      ======================================================================== */
   body.print-mode-polos .kwitansi-sheet {
-    background: #eef7fd !important;
+    background: #ffffff !important;
   }
 
-  body.print-mode-polos .ornament,
-  body.print-mode-polos .static-label,
-  body.print-mode-polos .static-line,
-  body.print-mode-polos .hatch-strip,
-  body.print-mode-polos .stub-frame,
-  body.print-mode-polos .perforation-border {
-    visibility: visible !important;
+  body.print-mode-polos .overlay-bg-image {
+    display: block !important;
+    opacity: 1 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 }
 
 /* ==========================================================================
    STRUKTUR POSISI FISIK DALAM MILIMETER (mm)
-   Sesuai Persis dengan Scan Blangko Toko Asli (Paperline / SiDU 250x100mm)
+   Ukuran Kertas: 250mm x 100mm
+   Dikalibrasi Tepat Berdasarkan Koordinat Scan Raster Blangko Toko Asli
    ========================================================================== */
 
 .kwitansi-sheet {
@@ -146,7 +135,7 @@
   overflow: hidden;
 }
 
-/* Gambar Blangko Asli sebagai Background/Overlay */
+/* Gambar Scan Blangko Asli Sebagai Background / Template Presisi */
 .overlay-bg-image {
   position: absolute;
   top: 0;
@@ -158,44 +147,313 @@
   background-repeat: no-repeat;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.85;
-}
-
-/* Frame Bonggol / Lembar Kiri (0mm - 43mm) */
-.stub-frame {
-  position: absolute;
-  top: 4mm;
-  left: 4mm;
-  width: 35mm;
-  height: 92mm;
-  border: 1.5px solid #4a90b8;
-  box-sizing: border-box;
-  z-index: 2;
-  border-radius: 1mm;
-}
-
-/* Garis Perforasi Pemisah Bonggol & Kwitansi Utama */
-.perforation-border {
-  position: absolute;
-  top: 0;
-  left: 42.5mm;
-  width: 2px;
-  height: 100mm;
-  border-right: 1.5px dotted #6aaacb;
-  z-index: 2;
-  pointer-events: none;
+  opacity: 0.90;
+  transition: opacity 0.15s ease;
 }
 
 /* ==========================================================================
-   BAGIAN BONGGOL KIRI (STUB ARSIP) - Opsional jika ada isian arsip
+   ELEMEN STATIS BLANGKO (Hanya Tampil di Mode Polos saat Tidak Ada Blangko)
+   Di Mode Blangko Toko, elemen-elemen ini otomatis disembunyikan
+   agar TIDAK TERJADI GHOSTING / TAMPILAN GANDA DENGAN FOTO ASLI.
    ========================================================================== */
+body.preview-blangko-mode .static-label,
+body.preview-blangko-mode .static-line,
+body.preview-blangko-mode .hatch-strip,
+body.preview-blangko-mode .stub-frame,
+body.preview-blangko-mode .perforation-border {
+  display: none !important;
+}
+
+/* Mode Kertas Polos: Tampilkan Garis & Label Vektor */
+body.preview-polos-mode .static-label,
+body.preview-polos-mode .static-line,
+body.preview-polos-mode .hatch-strip {
+  display: block;
+}
+
+.label-no {
+  position: absolute;
+  top: 10.5mm;
+  left: 54mm;
+  font-family: 'Times New Roman', serif;
+  font-size: 13pt;
+  font-weight: bold;
+  color: #1a4f72;
+}
+
+.line-no {
+  position: absolute;
+  top: 15.7mm;
+  left: 64mm;
+  width: 38mm;
+  height: 1px;
+  border-bottom: 1.2px solid #1a4f72;
+}
+
+.label-terima {
+  position: absolute;
+  top: 19.5mm;
+  left: 54mm;
+  font-family: 'Times New Roman', serif;
+  font-size: 10.5pt;
+  font-weight: 600;
+  color: #1a4f72;
+}
+
+.line-terima {
+  position: absolute;
+  top: 24.5mm;
+  left: 92mm;
+  width: 148mm;
+  height: 1px;
+  border-bottom: 1.2px solid #1a4f72;
+}
+
+.label-uang {
+  position: absolute;
+  top: 29.5mm;
+  left: 54mm;
+  font-family: 'Times New Roman', serif;
+  font-size: 10.5pt;
+  font-weight: 600;
+  color: #1a4f72;
+}
+
+.hatch-uang {
+  position: absolute;
+  top: 28.0mm;
+  left: 95mm;
+  width: 145mm;
+  height: 9.1mm;
+  border-top: 1px solid #1a4f72;
+  border-bottom: 1px solid #1a4f72;
+}
+
+.label-untuk {
+  position: absolute;
+  top: 40.5mm;
+  left: 54mm;
+  font-family: 'Times New Roman', serif;
+  font-size: 10.5pt;
+  font-weight: 600;
+  color: #1a4f72;
+}
+
+.line-untuk-1 {
+  position: absolute;
+  top: 44.6mm;
+  left: 98mm;
+  width: 142mm;
+  height: 1px;
+  border-bottom: 1.2px solid #1a4f72;
+}
+
+.line-untuk-2 {
+  position: absolute;
+  top: 52.1mm;
+  left: 54mm;
+  width: 186mm;
+  height: 1px;
+  border-bottom: 1.2px solid #1a4f72;
+}
+
+.line-untuk-3 {
+  position: absolute;
+  top: 59.3mm;
+  left: 54mm;
+  width: 186mm;
+  height: 1px;
+  border-bottom: 1.2px solid #1a4f72;
+}
+
+.line-tanggal {
+  position: absolute;
+  top: 66.8mm;
+  left: 160mm;
+  width: 80mm;
+  height: 1px;
+  border-bottom: 1.2px solid #1a4f72;
+}
+
+.label-rp {
+  position: absolute;
+  top: 78.6mm;
+  left: 54.4mm;
+  font-family: 'Times New Roman', serif;
+  font-size: 14pt;
+  font-weight: bold;
+  color: #1a4f72;
+}
+
+.hatch-rp {
+  position: absolute;
+  top: 78.6mm;
+  left: 64.5mm;
+  width: 57.5mm;
+  height: 10mm;
+  border-top: 1.2px solid #1a4f72;
+  border-bottom: 1.2px solid #1a4f72;
+}
+
+/* ==========================================================================
+   KOORDINAT PRESISI TEKS ISIAN (PRINTED FIELDS)
+   Disesuaikan Sempurna dengan Garis dan Kotak Blangko Toko
+   ========================================================================== */
+
+/* 1. Isian Nomor Kwitansi */
+.field-no {
+  position: absolute;
+  top: 10.2mm;
+  left: 65mm;
+  width: 37mm;
+  font-size: 10pt;
+  font-weight: 800;
+  font-family: var(--base-font);
+  color: #0b1728;
+  letter-spacing: 0.5px;
+  z-index: 10;
+}
+
+/* 2. Isian Telah Terima Dari */
+.field-terima {
+  position: absolute;
+  top: 18.8mm;
+  left: 93mm;
+  width: 147mm;
+  font-size: 10.5pt;
+  font-weight: 700;
+  font-family: var(--base-font);
+  color: #0b1728;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  z-index: 10;
+}
+
+/* 3. Isian Terbilang Uang Sejumlah (Di Dalam Kotak Arsir) */
+.field-terbilang {
+  position: absolute;
+  top: 28.2mm;
+  left: 96mm;
+  width: 144mm;
+  height: 8.8mm;
+  font-size: 9.5pt;
+  font-weight: 700;
+  font-style: italic;
+  font-family: var(--base-font);
+  color: #0b1728;
+  line-height: 4.4mm;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  z-index: 10;
+}
+
+/* 4. Isian Untuk Pembayaran (3 Baris Garis) */
+.field-untuk-line-1 {
+  position: absolute;
+  top: 39.2mm;
+  left: 99mm;
+  width: 141mm;
+  font-size: 9.5pt;
+  font-family: var(--base-font);
+  color: #0b1728;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 10;
+}
+
+.field-untuk-line-2 {
+  position: absolute;
+  top: 46.8mm;
+  left: 54mm;
+  width: 186mm;
+  font-size: 9.5pt;
+  font-family: var(--base-font);
+  color: #0b1728;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 10;
+}
+
+.field-untuk-line-3 {
+  position: absolute;
+  top: 54.0mm;
+  left: 54mm;
+  width: 186mm;
+  font-size: 9.5pt;
+  font-family: var(--base-font);
+  color: #0b1728;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 10;
+}
+
+/* 5. Isian Tempat & Tanggal Transaksi */
+.field-tanggal-tempat {
+  position: absolute;
+  top: 61.2mm;
+  left: 160mm;
+  width: 80mm;
+  font-size: 9.5pt;
+  font-family: var(--base-font);
+  color: #0b1728;
+  text-align: center;
+  z-index: 10;
+}
+
+/* 6. Isian Kotak Nominal Angka (Rp. 100.000.000,-)
+   Pas Tepat di Tengah Vertikal Kotak Arsir Blangko Toko (78.6mm - 88.6mm) */
+.field-nominal {
+  position: absolute;
+  top: 78.6mm;
+  left: 65.5mm;
+  width: 56.5mm;
+  height: 10.0mm;
+  font-size: 12.5pt;
+  font-weight: 800;
+  font-family: var(--base-font);
+  color: #0b1728;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  z-index: 10;
+}
+
+/* 7. Isian Tanda Tangan & Penerima (Kanan Bawah) */
+.signature-box {
+  position: absolute;
+  top: 72mm;
+  left: 160mm;
+  width: 80mm;
+  text-align: center;
+  z-index: 10;
+}
+
+.field-penerima-nama {
+  position: absolute;
+  top: 14mm;
+  left: 0;
+  width: 80mm;
+  font-size: 10pt;
+  font-weight: 800;
+  font-family: var(--base-font);
+  color: #0b1728;
+  text-transform: uppercase;
+}
+
+/* Lembar Bonggol Kiri */
 .kwitansi-stub {
   position: absolute;
   top: 5mm;
   left: 5mm;
   width: 33mm;
   height: 90mm;
-  z-index: 5;
+  z-index: 10;
 }
 
 .stub-field-no {
@@ -227,330 +485,15 @@
   font-weight: 700;
 }
 
-/* ==========================================================================
-   BAGIAN KWITANSI UTAMA (44mm - 250mm)
-   Posisi diukur langsung dari koordinat fisik blangko toko:
-   - X Ref Label: 52mm
-   - X Ref Isian: 92mm - 242mm
-   ========================================================================== */
-.kwitansi-main {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 250mm;
-  height: 100mm;
-  z-index: 5;
-}
-
-/* 1. Baris No. (Y = 15.5mm) */
-.label-no {
-  position: absolute;
-  top: 11mm;
-  left: 52mm;
-  font-family: 'Times New Roman', serif;
-  font-size: 13pt;
-  font-weight: bold;
-  color: #1a4f72;
-}
-
-.line-no {
-  position: absolute;
-  top: 15.5mm;
-  left: 63mm;
-  width: 38mm;
-  height: 1px;
-  border-bottom: 1px solid #1a4f72;
-}
-
-.field-no {
-  position: absolute;
-  top: 9.8mm;
-  left: 64mm;
-  width: 38mm;
-  font-size: 10.5pt;
-  font-weight: 800;
-  font-family: var(--base-font);
-  color: #000;
-  letter-spacing: 0.4px;
-}
-
-/* 2. Baris Telah Terima Dari (Y = 24.5mm) */
-.label-terima {
-  position: absolute;
-  top: 20mm;
-  left: 52mm;
-  font-family: 'Times New Roman', serif;
-  font-size: 10.5pt;
-  font-weight: 600;
-  color: #1a4f72;
-  white-space: nowrap;
-}
-
-.line-terima {
-  position: absolute;
-  top: 24.5mm;
-  left: 92mm;
-  width: 150mm;
-  height: 1px;
-  border-bottom: 1px solid #1a4f72;
-}
-
-.field-terima {
-  position: absolute;
-  top: 18.5mm;
-  left: 92mm;
-  width: 150mm;
-  font-size: 10.5pt;
-  font-weight: 700;
-  font-family: var(--base-font);
-  color: #000;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-transform: uppercase;
-}
-
-/* 3. Baris Uang Sejumlah / Terbilang (Y = 32.5mm, Garis Hatch: 28mm - 37mm) */
-.label-uang {
-  position: absolute;
-  top: 30mm;
-  left: 52mm;
-  font-family: 'Times New Roman', serif;
-  font-size: 10.5pt;
-  font-weight: 600;
-  color: #1a4f72;
-  white-space: nowrap;
-}
-
-.hatch-uang {
-  position: absolute;
-  top: 28mm;
-  left: 93mm;
-  width: 149mm;
-  height: 9mm;
-  background: repeating-linear-gradient(
-    135deg,
-    transparent,
-    transparent 1.2mm,
-    rgba(26, 79, 114, 0.25) 1.2mm,
-    rgba(26, 79, 114, 0.25) 1.6mm
-  );
-  border-top: 1px solid #1a4f72;
-  border-bottom: 1px solid #1a4f72;
-  transform: skewX(-18deg);
-  transform-origin: top left;
-}
-
-.field-terbilang {
-  position: absolute;
-  top: 27.5mm;
-  left: 95mm;
-  width: 147mm;
-  height: 10mm;
-  font-size: 9pt;
-  font-weight: 700;
-  font-style: italic;
-  font-family: var(--base-font);
-  color: #000;
-  line-height: 4.5mm;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  z-index: 10;
-}
-
-/* 4. Baris Untuk Pembayaran (3 Baris Garis) */
-.label-untuk {
-  position: absolute;
-  top: 41mm;
-  left: 52mm;
-  font-family: 'Times New Roman', serif;
-  font-size: 10.5pt;
-  font-weight: 600;
-  color: #1a4f72;
-  white-space: nowrap;
-}
-
-.line-untuk-1 {
-  position: absolute;
-  top: 44.6mm;
-  left: 98mm;
-  width: 144mm;
-  height: 1px;
-  border-bottom: 1px solid #1a4f72;
-}
-
-.line-untuk-2 {
-  position: absolute;
-  top: 52.1mm;
-  left: 52mm;
-  width: 190mm;
-  height: 1px;
-  border-bottom: 1px solid #1a4f72;
-}
-
-.line-untuk-3 {
-  position: absolute;
-  top: 59.3mm;
-  left: 52mm;
-  width: 190mm;
-  height: 1px;
-  border-bottom: 1px solid #1a4f72;
-}
-
-/* Field Isian Untuk Pembayaran */
-.field-untuk-line-1 {
-  position: absolute;
-  top: 38.5mm;
-  left: 98mm;
-  width: 144mm;
-  font-size: 9.5pt;
-  font-family: var(--base-font);
-  color: #000;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.field-untuk-line-2 {
-  position: absolute;
-  top: 46mm;
-  left: 52mm;
-  width: 190mm;
-  font-size: 9.5pt;
-  font-family: var(--base-font);
-  color: #000;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.field-untuk-line-3 {
-  position: absolute;
-  top: 53.2mm;
-  left: 52mm;
-  width: 190mm;
-  font-size: 9.5pt;
-  font-family: var(--base-font);
-  color: #000;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* 5. Tanggal Transaksi (Y = 66.8mm, X = 160mm - 242mm) */
-.line-tanggal {
-  position: absolute;
-  top: 66.8mm;
-  left: 160mm;
-  width: 82mm;
-  height: 1px;
-  border-bottom: 1px solid #1a4f72;
-}
-
-.field-tanggal-tempat {
-  position: absolute;
-  top: 60.5mm;
-  left: 160mm;
-  width: 82mm;
-  font-size: 9.5pt;
-  font-family: var(--base-font);
-  color: #000;
-  text-align: center;
-}
-
-/* 6. Rp. & Kotak Nominal (Y = 78.5mm - 86.6mm, X = 52mm - 124mm) */
-.label-rp {
-  position: absolute;
-  top: 77mm;
-  left: 52mm;
-  font-family: 'Times New Roman', serif;
-  font-size: 15pt;
-  font-weight: bold;
-  color: #1a4f72;
-}
-
-.hatch-rp {
-  position: absolute;
-  top: 78.5mm;
-  left: 65mm;
-  width: 59mm;
-  height: 8.5mm;
-  background: repeating-linear-gradient(
-    135deg,
-    transparent,
-    transparent 1.2mm,
-    rgba(26, 79, 114, 0.25) 1.2mm,
-    rgba(26, 79, 114, 0.25) 1.6mm
-  );
-  border-top: 1px solid #1a4f72;
-  border-bottom: 1px solid #1a4f72;
-  transform: skewX(-18deg);
-  transform-origin: top left;
-}
-
-.field-nominal {
-  position: absolute;
-  top: 76.5mm;
-  left: 66mm;
-  width: 58mm;
-  height: 10mm;
-  font-size: 13pt;
-  font-weight: 900;
-  font-family: var(--base-font);
-  color: #000;
-  letter-spacing: 0.6px;
-  display: flex;
-  align-items: center;
-  z-index: 10;
-}
-
-/* 7. Area Tanda Tangan & Penerima (Y = 82mm - 94mm, X = 160mm - 242mm) */
-.signature-box {
-  position: absolute;
-  top: 72mm;
-  left: 160mm;
-  width: 82mm;
-  text-align: center;
-}
-
-.materai-slot {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 24mm;
-  height: 12mm;
-  border: 0.8px dashed #8baac0;
-  font-size: 6.5pt;
-  color: #557b96;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  line-height: 2.8mm;
-}
-
-.field-penerima-nama {
-  position: absolute;
-  top: 14mm;
-  left: 0;
-  width: 82mm;
-  font-size: 10pt;
-  font-weight: 800;
-  font-family: var(--base-font);
-  color: #000;
-  text-transform: uppercase;
-}
-
-/* Kolom Saksi (Tengah Bawah) */
+/* Kolom Saksi */
 .saksi-box {
   position: absolute;
   top: 72mm;
-  left: 120mm;
+  left: 118mm;
   width: 40mm;
   text-align: center;
   display: none;
+  z-index: 10;
 }
 
 body.show-saksi .saksi-box {
@@ -568,5 +511,5 @@ body.show-saksi .saksi-box {
   font-size: 8.5pt;
   font-weight: 700;
   font-family: var(--base-font);
-  color: #000;
+  color: #0b1728;
 }
