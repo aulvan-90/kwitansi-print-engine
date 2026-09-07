@@ -303,7 +303,7 @@ body.preview-polos-mode .hatch-strip {
 /* 1. Isian Nomor Kwitansi (Garis di 15.7mm) */
 .field-no {
   position: absolute;
-  top: 11.8mm;
+  top: 13.2mm;
   left: 65mm;
   width: 37mm;
   font-size: 10pt;
@@ -314,10 +314,10 @@ body.preview-polos-mode .hatch-strip {
   z-index: 10;
 }
 
-/* 2. Isian Telah Terima Dari (Garis di 24.2mm) */
+/* 2. Isian Telah Terima Dari (Garis di 24.2mm - Menempel Tepat di Atas Garis) */
 .field-terima {
   position: absolute;
-  top: 20.4mm;
+  top: 22.8mm;
   left: 93mm;
   width: 147mm;
   font-size: 10.5pt;
@@ -353,7 +353,7 @@ body.preview-polos-mode .hatch-strip {
 /* 4. Isian Untuk Pembayaran (3 Baris Garis: 44.6mm, 52.1mm, 59.3mm) */
 .field-untuk-line-1 {
   position: absolute;
-  top: 40.8mm;
+  top: 42.6mm;
   left: 99mm;
   width: 141mm;
   font-size: 9.5pt;
@@ -367,7 +367,7 @@ body.preview-polos-mode .hatch-strip {
 
 .field-untuk-line-2 {
   position: absolute;
-  top: 48.2mm;
+  top: 50.0mm;
   left: 54mm;
   width: 186mm;
   font-size: 9.5pt;
@@ -381,7 +381,7 @@ body.preview-polos-mode .hatch-strip {
 
 .field-untuk-line-3 {
   position: absolute;
-  top: 55.4mm;
+  top: 57.2mm;
   left: 54mm;
   width: 186mm;
   font-size: 9.5pt;
@@ -396,7 +396,7 @@ body.preview-polos-mode .hatch-strip {
 /* 5. Isian Tempat & Tanggal Transaksi (Garis di 66.8mm) */
 .field-tanggal-tempat {
   position: absolute;
-  top: 62.8mm;
+  top: 64.2mm;
   left: 160mm;
   width: 80mm;
   font-size: 9.5pt;
@@ -424,26 +424,53 @@ body.preview-polos-mode .hatch-strip {
   z-index: 10;
 }
 
-/* 7. Isian Tanda Tangan & Penerima (Kanan Bawah) */
+/* 7. Area Tanda Tangan, Materai & Penerima (Kanan Bawah)
+   Materai diposisikan DI ATAS SUPRIYATNA dan PERSIS DI TENGAH-TENGAHNYA */
 .signature-box {
   position: absolute;
-  top: 72mm;
+  top: 68mm;
   left: 160mm;
   width: 80mm;
+  height: 28mm;
   text-align: center;
   z-index: 10;
 }
 
+.materai-slot {
+  position: absolute;
+  top: 0mm;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 26mm;
+  height: 14mm;
+  border: 1px dashed #4a90b8;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 6.8pt;
+  font-weight: 700;
+  color: #1a4f72;
+  text-align: center;
+  line-height: 2.8mm;
+  letter-spacing: 0.3px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
 .field-penerima-nama {
   position: absolute;
-  top: 14mm;
+  top: 16.5mm;
   left: 0;
-  width: 80mm;
-  font-size: 10pt;
+  width: 100%;
+  font-size: 10.5pt;
   font-weight: 800;
   font-family: var(--base-font);
   color: #0b1728;
+  text-align: center;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* Lembar Bonggol Kiri */
